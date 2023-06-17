@@ -1,9 +1,10 @@
 import { FC, ReactNode, useEffect, useReducer } from "react";
 import { EntriesContext } from "./";
 import { entriesReducer } from "./";
+
 import { Entry } from "../../interfaces";
-import { v4 as uuidv4 } from "uuid";
 import { entriesApi } from "../../apis";
+import { useSnackbar } from "notistack";
 
 export interface EntriesState {
   entries: Entry[];
@@ -15,20 +16,37 @@ const Entries_INITIAL_STATE: EntriesState = {
 
 export const EntriesProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(entriesReducer, Entries_INITIAL_STATE);
+  const { enqueueSnackbar } = useSnackbar();
 
-  const addNewEntry = (description: string) => {
-    const newEntry: Entry = {
-      _id: uuidv4(),
-      description,
-      createdAt: Date.now(),
-      status: "pending",
-    };
-
-    dispatch({ type: "[Entry] - AddEntry", payload: newEntry });
+  const addNewEntry = async (description: string) => {
+    const { data } = await entriesApi.post<Entry>("/entries", { description });
+    dispatch({ type: "[Entry] - AddEntry", payload: data });
   };
 
-  const updateEntry = (entry: Entry) => {
-    dispatch({ type: "[Entry] - Entry-Update", payload: entry });
+  const updateEntry = async (
+    { description, _id, status }: Entry,
+    showSnackBar: boolean = false
+  ) => {
+    try {
+      const { data } = await entriesApi.put<Entry>(`/entries/${_id}`, {
+        description,
+        status,
+      });
+      if (showSnackBar) {
+        enqueueSnackbar("Updated Entry", {
+          variant: "success",
+          autoHideDuration: 1500,
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+        });
+      }
+
+      dispatch({ type: "[Entry] - Entry-Update", payload: data });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const refreshEntries = async () => {

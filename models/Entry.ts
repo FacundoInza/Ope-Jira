@@ -12,8 +12,8 @@ const entrySchema = new Schema({
       values: ["pending", "in-progress", "finished"],
       message: "{VALUE}  no es un estado permitido",
     },
+    default: "pending",
   },
-  default: "pending",
 });
 
 const EntryModel: Model<IEntry> =
