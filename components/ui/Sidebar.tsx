@@ -24,7 +24,7 @@ const Sidebar = () => {
         <Box sx={{ padding: "5px 10px" }}>
           <Typography variant="h4">Menu</Typography>
         </Box>
-
+        <Divider />
         <List>
           {menuItems.map((text, i) => (
             <ListItem button key={text}>
@@ -36,17 +36,6 @@ const Sidebar = () => {
           ))}
         </List>
       </Box>
-      <Divider />
-      <List>
-        {menuItems.map((text, i) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {i % 2 ? <InboxOutlinedIcon /> : <MailOutlinedIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
     </Drawer>
   );
 };

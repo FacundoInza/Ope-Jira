@@ -37,7 +37,6 @@ export const EntrieList: FC<Props> = ({ status }) => {
   };
 
   return (
-    //TODO: aqui haremos un Drop
     <div
       onDrop={onDropEntry}
       onDragOver={allowDrop}
@@ -45,8 +44,20 @@ export const EntrieList: FC<Props> = ({ status }) => {
     >
       <Paper
         sx={{
-          height: "calc(100vh - 180px)",
-          overflow: "-moz-hidden-unscrollable",
+          height: "calc(100vh - 350px)",
+          "&::-webkit-scrollbar": {
+            width: "0.5em",
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: "#f1f1f1",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#888",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            backgroundColor: "#555",
+          },
+          overflow: "auto",
           backgroundColor: "transparent",
           padding: "1px 5px",
         }}

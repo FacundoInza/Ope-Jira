@@ -12,7 +12,7 @@ interface Props {
 
 const Layout: FC<Props> = ({ title = "Open Jira", children }) => {
   return (
-    <Box sx={{ flexFlow: 1 }}>
+    <Box overflow={"hidden"}>
       <Head>
         <title>{title}</title>
       </Head>
