@@ -5,6 +5,7 @@ import { entriesReducer } from "./";
 import { Entry } from "../../interfaces";
 import { entriesApi } from "../../apis";
 import { useSnackbar } from "notistack";
+import { error } from "console";
 
 export interface EntriesState {
   entries: Entry[];
@@ -49,6 +50,27 @@ export const EntriesProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  const deleteEntry = async (entry: Entry, showSnackBar: boolean = false) => {
+    try {
+      const { data } = await entriesApi.delete(`/entries/${entry._id}`);
+
+      if (showSnackBar) {
+        enqueueSnackbar(data.message, {
+          variant: "error",
+          autoHideDuration: 1500,
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+        });
+      }
+
+      dispatch({ type: "[Entry] - Entry-Delete", payload: entry });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const refreshEntries = async () => {
     const { data } = await entriesApi.get<Entry[]>("/entries");
     dispatch({ type: "[Entry] - Refresh-Data", payload: data });
@@ -66,6 +88,7 @@ export const EntriesProvider: FC<{ children: ReactNode }> = ({ children }) => {
         //methods
         addNewEntry,
         updateEntry,
+        deleteEntry,
       }}
     >
       {children}

@@ -17,6 +17,7 @@ import {
   RadioGroup,
   TextField,
   IconButton,
+  Typography,
 } from "@mui/material";
 
 import SaveAsOutlinedIcon from "@mui/icons-material/SaveAsOutlined";
@@ -28,6 +29,7 @@ import Layout from "../../components/layout/Layout";
 import { dbEntries } from "../../database";
 import { EntriesContext } from "../../context/entries";
 import { dateFunctions } from "../../utils";
+import { useRouter } from "next/router";
 
 const validStatus: EntryStatus[] = ["pending", "in-progress", "finished"];
 
@@ -40,7 +42,9 @@ const EntryPage: FC<Props> = ({ entry }) => {
   const [status, setStatus] = useState(entry.status);
   const [touched, setTouched] = useState(false);
 
-  const { updateEntry } = useContext(EntriesContext);
+  const router = useRouter();
+
+  const { updateEntry, deleteEntry } = useContext(EntriesContext);
 
   const isNotValid = useMemo(
     () => inputValue.length <= 0 && touched,
@@ -67,19 +71,25 @@ const EntryPage: FC<Props> = ({ entry }) => {
     updateEntry(updatedEntry, true);
   };
 
+  const onClickDelete = () => {
+    deleteEntry(entry, true);
+    router.push("/");
+  };
+
   return (
     <Layout title={inputValue.substring(0, 10) + "..."}>
-      <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
+      <Grid container justifyContent="center" sx={{ marginTop: 15 }}>
         <Grid item xs={12} sm={8} md={6}>
           <Card>
             <CardHeader
-              title={`Entrie: ${inputValue}`}
+              title={`Ticket`}
               subheader={`Created at ${dateFunctions.getFormatDistanceToNow(
                 entry.createdAt
               )} few minutes ago`}
             />
+            <Typography margin={2}>{inputValue}</Typography>
             <FormControl sx={{ marginLeft: 2 }}>
-              <FormLabel>Estado:</FormLabel>
+              <FormLabel>Status:</FormLabel>
               <RadioGroup row value={status} onChange={onStatusChanged}>
                 {validStatus.map((option) => (
                   <FormControlLabel
@@ -126,6 +136,7 @@ const EntryPage: FC<Props> = ({ entry }) => {
       </Grid>
 
       <IconButton
+        onClick={onClickDelete}
         sx={{
           position: "fixed",
           bottom: 30,

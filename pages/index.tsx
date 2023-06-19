@@ -8,7 +8,11 @@ const HomePage: NextPage = () => {
     <Layout title="HOME - OpenJira">
       <Grid container spacing={2}>
         <Grid item xs={12} sm={4}>
-          <Card sx={{ height: "calc(100vh - 100px)" }}>
+          <Card
+            sx={{
+              height: "calc(100vh - 100px)",
+            }}
+          >
             <CardHeader title="Pending"></CardHeader>
             {/* Agregar una nueva entrada */}
             <NewEntry />
@@ -17,14 +21,28 @@ const HomePage: NextPage = () => {
           </Card>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <Card sx={{ height: "calc(100vh - 100px)" }}>
-            <CardHeader title="In Progess"></CardHeader>
+          <Card
+            sx={{
+              height: "calc(100vh - 100px)",
+            }}
+          >
+            <CardHeader
+              sx={{ marginBottom: "80px" }}
+              title="In Progess"
+            ></CardHeader>
             <EntrieList status="in-progress" />
           </Card>
         </Grid>
         <Grid item xs={12} sm={4}>
-          <Card sx={{ height: "calc(100vh - 100px)" }}>
-            <CardHeader title="Complete"></CardHeader>
+          <Card
+            sx={{
+              height: "calc(100vh - 100px)",
+            }}
+          >
+            <CardHeader
+              sx={{ marginBottom: "80px" }}
+              title="Complete"
+            ></CardHeader>
             <EntrieList status="finished" />
           </Card>
         </Grid>

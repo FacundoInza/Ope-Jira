@@ -24,6 +24,8 @@ export default function handler(
       return getEntry(req, res);
     case "PUT":
       return updateEntry(req, res);
+    case "DELETE":
+      return deleteEntry(req, res);
 
     default:
       return res.status(400).json({ message: "The Id is invalid" + id });
@@ -78,4 +80,25 @@ const getEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   }
 
   return res.status(200).json(entry);
+};
+
+const deleteEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const { id } = req.query;
+
+  try {
+    await db.connect();
+    const entry = await Entry.findById(id);
+
+    if (!entry) {
+      return res.status(404).json({ message: "Documento no encontrado" });
+    }
+
+    await entry.deleteOne();
+    await db.disconnect();
+
+    return res.status(200).json({ message: "Document delete succesfully" });
+  } catch (error) {
+    console.error("Error deleting document:", error);
+    return res.status(500).json({ message: "Enviroment error server" });
+  }
 };
